@@ -8,6 +8,7 @@ import com.nathanaelg.messagingapp.shared.Socket;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class MessagingServer extends MessagingApp {
@@ -65,6 +66,7 @@ public class MessagingServer extends MessagingApp {
 
     public synchronized void register(Registration userRegistration) {
         if (!registeredUsers.contains(userRegistration)) {
+            sendMessage(new Message("SERVER", String.format("%s has entered the chat. Say hi!", userRegistration.getName()), new Timestamp(System.currentTimeMillis()).toString(), false));
             registeredUsers.add(userRegistration);
             sendMessage(userRegistration, "Successfully registered.", true);
         } else sendMessage(userRegistration, "Registration unsuccessful. Name is taken.", false);

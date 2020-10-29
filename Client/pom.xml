@@ -48,11 +48,13 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                    <release>11</release>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -62,6 +64,8 @@
                         <configuration>
                             <archive>
                                 <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <classpathPrefix>lib</classpathPrefix>
                                     <mainClass>
                                         com.nathanaelg.messagingapp.client.MessagesView
                                     </mainClass>
