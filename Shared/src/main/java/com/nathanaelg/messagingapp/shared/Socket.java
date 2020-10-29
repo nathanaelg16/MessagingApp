@@ -2,6 +2,7 @@ package com.nathanaelg.messagingapp.shared;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Enumeration;
 
 public class Socket {
     private final int port;
@@ -12,9 +13,29 @@ public class Socket {
         this.port = port;
 
         try {
-            this.address = InetAddress.getLocalHost();
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+            String ip = null;
+
+            outerloop:
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface iface = interfaces.nextElement();
+
+                if (iface.isLoopback() || !iface.isUp()) continue;
+
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+
+                    if (addr instanceof Inet6Address) continue;
+
+                    ip = addr.getHostAddress();
+                    break outerloop;
+                }
+            }
+            this.address = InetAddress.getByName(ip);
             System.out.println("IP Address: " + address);
-        } catch (UnknownHostException e) {
+        } catch (SocketException | UnknownHostException e) {
             doErrorHandling(e);
         }
 
